@@ -1,7 +1,7 @@
 #[macro_export]
 macro_rules! domtxt {
     ($x:expr) => {
-        Text($x)
+        Text(String::from($x))
     };
 }
 
@@ -10,7 +10,7 @@ macro_rules! empty {
     ($x:tt; $(($a:tt,$v:expr)),+) => {
         EmptyElement(DomEmptyElem::new(
             $x,
-            vec![ $(($a, $v),)* ]
+            vec![ $(($a, String::from($v)),)* ]
         ))
     };
     ($x:tt; $(($a:tt,$v:expr),)+) => { empty!($x; $(($a,$v)),*) };
@@ -27,7 +27,7 @@ macro_rules! elem {
     ($x:tt; $(($a:tt,$v:expr)),+; $($e:expr),+) => {
         Element(DomElem::new(
             $x,
-            vec![ $(($a, $v),)* ],
+            vec![ $(($a, String::from($v)),)* ],
             vec![ $($e,)* ],
         ))
     };
@@ -35,7 +35,7 @@ macro_rules! elem {
     ($x:tt; $(($a:tt,$v:expr)),+) => {
         Element(DomElem::new(
             $x,
-            vec![ $(($a, $v),)* ],
+            vec![ $(($a, String::from($v)),)* ],
             Vec::new(),
         ))
     };

@@ -1,17 +1,17 @@
 use crate::{Render, DomNode};
 
 #[derive(Debug, Clone)]
-pub struct DomDocument<'a> {
-    pub nodes: Vec<DomNode<'a>>,
+pub struct DomDocument {
+    pub nodes: Vec<DomNode>,
 }
 
-impl<'a> DomDocument<'a> {
-    pub fn new(nodes: Vec<DomNode<'a>>) -> Self {
+impl DomDocument {
+    pub fn new(nodes: Vec<DomNode>) -> Self {
         DomDocument { nodes: nodes }
     }
 }
 
-impl<'a> Render for DomDocument<'a> {
+impl Render for DomDocument {
     fn render(&self) -> String {
         self.nodes
             .iter()

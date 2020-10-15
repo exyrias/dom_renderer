@@ -21,7 +21,7 @@ mod render {
     #[test]
     fn domemptyelem() {
         let n = EmptyElement(DomEmptyElem::new("img",
-            vec![("src", "image.jpg")]
+            vec![("src", String::from("image.jpg"))]
         ));
         assert_eq!("<img src=\"image.jpg\">", n.render());
     }
@@ -29,9 +29,9 @@ mod render {
     #[test]
     fn domelem() {
         let n = Element(DomElem::new("div",
-            vec![("id", "id1"), ("class", "class1")],
+            vec![("id", String::from("id1")), ("class", String::from("class1"))],
             vec![
-                Text("test"),
+                Text(String::from("test")),
                 EmptyElement(DomEmptyElem::new("br", Vec::new())),
             ]
         ));
@@ -40,7 +40,7 @@ mod render {
 
     #[test]
     fn domtext() {
-        let n = Text("text");
+        let n = Text(String::from("text"));
         assert_eq!("text", n.render());
     }
 }

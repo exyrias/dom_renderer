@@ -1,18 +1,18 @@
 use crate::Render;
 
 #[derive(Debug, Clone)]
-pub struct DomDocType<'a> {
-    pub doc_type: &'a str,
+pub struct DomDocType {
+    pub doc_type: &'static str,
 }
 
-impl<'a> Render for DomDocType<'a> {
+impl Render for DomDocType {
     fn render(&self) -> String {
         format!("<!DOCTYPE {}>", self.doc_type)
     }
 }
 
-impl<'a> DomDocType<'a> {
-    pub fn new(doc_type: &'a str) -> Self {
+impl DomDocType {
+    pub fn new(doc_type: &'static str) -> Self {
         DomDocType { doc_type }
     }
 }

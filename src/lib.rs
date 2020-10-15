@@ -13,16 +13,16 @@ pub trait Render {
 }
 
 #[derive(Debug, Clone)]
-pub enum DomNode<'a> {
-    Document(DomDocument<'a>),
-    DocumentType(DomDocType<'a>),
-    EmptyElement(DomEmptyElem<'a>),
-    Element(DomElem<'a>),
-    Text(&'a str),
+pub enum DomNode {
+    Document(DomDocument),
+    DocumentType(DomDocType),
+    EmptyElement(DomEmptyElem),
+    Element(DomElem),
+    Text(String),
 }
 pub use DomNode::*;
 
-impl<'a> Render for DomNode<'a> {
+impl Render for DomNode {
     fn render(&self) -> String {
         match self {
             Document(n) => n.render(),

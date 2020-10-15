@@ -1,13 +1,13 @@
 use crate::{DomNode, Render};
 
 #[derive(Debug, Clone)]
-pub struct DomEmptyElem<'a> {
+pub struct DomEmptyElem {
     pub tag: &'static str,
-    pub attributes: Vec<(&'static str, &'a str)>,
+    pub attributes: Vec<(&'static str, String)>,
 }
 
-impl<'a> DomEmptyElem<'a> {
-    pub fn new(tag: &'static str, attr: Vec<(&'static str, &'a str)>) -> Self {
+impl DomEmptyElem {
+    pub fn new(tag: &'static str, attr: Vec<(&'static str, String)>) -> Self {
         DomEmptyElem {
             tag,
             attributes: attr,
@@ -15,7 +15,7 @@ impl<'a> DomEmptyElem<'a> {
     }
 }
 
-impl<'a> Render for DomEmptyElem<'a> {
+impl Render for DomEmptyElem {
     fn render(&self) -> String {
         let attr_str = self
             .attributes
@@ -28,17 +28,17 @@ impl<'a> Render for DomEmptyElem<'a> {
 }
 
 #[derive(Debug, Clone)]
-pub struct DomElem<'a> {
+pub struct DomElem {
     pub tag: &'static str,
-    pub attributes: Vec<(&'static str, &'a str)>,
-    pub child_nodes: Vec<DomNode<'a>>,
+    pub attributes: Vec<(&'static str, String)>,
+    pub child_nodes: Vec<DomNode>,
 }
 
-impl<'a> DomElem<'a> {
+impl DomElem {
     pub fn new(
         tag: &'static str,
-        attr: Vec<(&'static str, &'a str)>,
-        child_nodes: Vec<DomNode<'a>>,
+        attr: Vec<(&'static str, String)>,
+        child_nodes: Vec<DomNode>,
     ) -> Self {
         DomElem {
             tag,
@@ -48,7 +48,7 @@ impl<'a> DomElem<'a> {
     }
 }
 
-impl<'a> Render for DomElem<'a> {
+impl Render for DomElem {
     fn render(&self) -> String {
         let attr_str = self
             .attributes
