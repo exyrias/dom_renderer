@@ -7,7 +7,6 @@ edition = "2018"
 description = "Crate for rendering html (or other DOMs) strings"
 keywords = ["DOM", "HTML"]
 repository = "https://github.com/exyrias/dom_renderer.git"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+documentation = https://docs.rs/dom_renderer/"
 
 [dependencies]
