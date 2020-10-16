@@ -1,5 +1,3 @@
-
-
 #[cfg(test)]
 mod macro_test {
     use dom_renderer::*;
