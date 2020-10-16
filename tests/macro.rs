@@ -3,7 +3,20 @@ mod macro_test {
     use dom_renderer::*;
 
     #[test]
-    fn str() {
+    fn doctype() {
+        assert_eq!("<!DOCTYPE html>", doctype!("html").render());
+    }
+
+    #[test]
+    fn domdoc() {
+        let d1 = domdoc!(doctype!("html"), elem!("html"));
+        let d2 = domdoc!(doctype!("html"), elem!("html"), );
+        assert_eq!("<!DOCTYPE html><html></html>", d1.render());
+        assert_eq!("<!DOCTYPE html><html></html>", d2.render());
+    }
+
+    #[test]
+    fn domtxt() {
         assert_eq!("test", domtxt!("test").render());
     }
 
@@ -85,20 +98,67 @@ mod macro_test {
     }
 
     #[test]
+    fn end_elem() {
+        let e1 = end_elem!("div");
+        assert_eq!("<div></div>", e1.render());
+
+        let e1 = end_elem!("div"; ("id", "id1"));
+        let e2 = end_elem!("div"; ("id", "id1"),);
+        assert_eq!("<div id=\"id1\"></div>", e1.render());
+        assert_eq!("<div id=\"id1\"></div>", e2.render());
+
+        let e1 = end_elem!("div"; ("id", "id1"); "text");
+        assert_eq!("<div id=\"id1\">text</div>", e1.render());
+
+        let e1 = end_elem!("div"; "text");
+        assert_eq!("<div>text</div>", e1.render());
+    }
+
+    #[test]
     fn html_macro() {
-        let html1 = html_simple!(
-            title: "test",
-            body:
-                elem!("h1"; domtxt!("section1")),
-                elem!("p"; domtxt!("paragraph1"))
+        let html1 = html!(
+            ("lang", "en");
+            elem!("head"),
+            elem!("body")
         );
-        let html2 = html_simple!(
-            title: "test",
-            body:
-                elem!("h1"; domtxt!("section1")),
-                elem!("p"; domtxt!("paragraph1")),
+        let html2 = html!(
+            ("lang", "en");
+            elem!("head"),
+            elem!("body"),
         );
-        assert_eq!("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>test</title></head><body><h1>section1</h1><p>paragraph1</p></body></html>", html1.render());
-        assert_eq!("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>test</title></head><body><h1>section1</h1><p>paragraph1</p></body></html>", html2.render());
+        let expect = "<!DOCTYPE html><html lang=\"en\"><head></head><body></body></html>";
+        assert_eq!(expect, html1.render());
+        assert_eq!(expect, html2.render());
+
+        let html1 = html!(
+            elem!("head"),
+            elem!("body")
+        );
+        let html2 = html!(
+            elem!("head"),
+            elem!("body"),
+        );
+        let expect = "<!DOCTYPE html><html><head></head><body></body></html>";
+        assert_eq!(expect, html1.render());
+        assert_eq!(expect, html2.render());
+    }
+
+    #[test]
+    fn html_basic(){
+        let html1 = html_basic!(
+            title: "Page Title",
+            body:
+                end_elem!("h1"; "Section"),
+                end_elem!("p"; "Text goes here...")
+        );
+        let html2 = html_basic!(
+            title: "Page Title",
+            body:
+                end_elem!("h1"; "Section"),
+                end_elem!("p"; "Text goes here..."),
+        );
+        let expect = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>";
+        assert_eq!(expect, html1.render());
+        assert_eq!(expect, html2.render());
     }
 }
