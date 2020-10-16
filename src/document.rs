@@ -1,5 +1,8 @@
+//! provides DOM Document (root node)
+
 use crate::{Render, DomNode};
 
+/// DOM Document Node (root node)
 #[derive(Debug, Clone)]
 pub struct DomDocument {
     pub nodes: Vec<DomNode>,

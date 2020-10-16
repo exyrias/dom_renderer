@@ -1,5 +1,8 @@
+//! provides DOM Elements
+
 use crate::{DomNode, Render};
 
+/// DOM Empty Element
 #[derive(Debug, Clone)]
 pub struct DomEmptyElem {
     pub tag: &'static str,
@@ -27,6 +30,7 @@ impl Render for DomEmptyElem {
     }
 }
 
+/// DOM Element with child elements
 #[derive(Debug, Clone)]
 pub struct DomElem {
     pub tag: &'static str,

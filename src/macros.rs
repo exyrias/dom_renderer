@@ -1,3 +1,8 @@
+//! provides macros to create DOM Eelement instances
+
+/// creates DOM Document
+/// 
+/// Use this to create a root node.
 #[macro_export]
 macro_rules! domdoc {
     ($($x:expr),*) => {
@@ -6,11 +11,23 @@ macro_rules! domdoc {
     ($($x:expr,)*) => { $crate::domdoc!($($x),*) };
 }
 
+/// creates DOM DocumentType
+/// # Example
+/// ```
+/// use dom_renderer::*;
+/// assert_eq!("<!DOCTYPE html>", doctype!("html").render());
+/// ```
 #[macro_export]
 macro_rules! doctype {
     ($x:expr) => { DocumentType(DomDocType::new($x)) };
 }
 
+/// creates DOM Text Node
+/// # Example
+/// ```
+/// use dom_renderer::*;
+/// assert_eq!("Text", domtxt!("Text").render());
+/// ```
 #[macro_export]
 macro_rules! domtxt {
     ($x:expr) => {
@@ -18,6 +35,25 @@ macro_rules! domtxt {
     };
 }
 
+/// creates DOM Empty Element
+/// 
+/// # Example
+/// Tag and attribute lists are separated by ';'
+/// 
+/// Attributes can be omitted.
+/// 
+/// ```
+/// use dom_renderer::*;
+/// 
+/// let br = empty!("br");
+/// assert_eq!("<br>", br.render());
+/// 
+/// let input = empty!("input";
+///     ("type", "text"),
+///     ("name", "user_name"),
+/// );
+/// assert_eq!("<input type=\"text\" name=\"user_name\">", input.render());
+/// ```
 #[macro_export]
 macro_rules! empty {
     ($x:expr) => { EmptyElement(DomEmptyElem::new( $x, Vec::new())) };
@@ -30,6 +66,24 @@ macro_rules! empty {
     ($x:expr; $(($a:expr,$v:expr),)+) => { $crate::empty!($x; $(($a,$v)),*) };
 }
 
+/// creates DOM Element
+/// 
+/// # Example
+/// Tag, attribute lists, and child elements are separated by ';'
+/// 
+/// Attributes and child elements can be omitted.
+/// 
+/// ```
+/// use dom_renderer::*;
+/// let div = elem!("div";
+///     ("id", "id1"),
+///     ("class", "class1");
+///     domtxt!("text"),
+///     empty!("br"),
+///     domtxt!("text"),
+/// );
+/// assert_eq!("<div id=\"id1\" class=\"class1\">text<br>text</div>", div.render());
+/// ```
 #[macro_export]
 macro_rules! elem {
     ($x:expr; $(($a:expr,$v:expr)),+; $($e:expr),+) => {
@@ -65,6 +119,15 @@ macro_rules! elem {
     };
 }
 
+/// crates DOM Element that have a single text node.
+/// # Example
+/// Tag, attribute lists, and text are separated by ';'
+/// 
+/// Attributes and child elements can be omitted.
+/// ```
+/// use dom_renderer::*;
+/// assert_eq!("<title>Title</title>", end_elem!("title"; "Title").render());
+/// ```
 #[macro_export]
 macro_rules! end_elem {
     ($x:expr) => { $crate::elem!($x) };
@@ -76,6 +139,24 @@ macro_rules! end_elem {
     ($x:expr; $e:expr) => { $crate::elem!($x; $crate::domtxt!($e)) };
 }
 
+/// creates HTML Document contains DocumenType and HTML element
+/// # Example
+/// ```
+/// use dom_renderer::*;
+/// let html = html!(
+///     ("lang", "en");
+///     elem!("head";
+///         empty!("meta"; ("charset", "utf-8")),
+///         end_elem!("title"; "Page Title")
+///     ),
+///     elem!("body";
+///         end_elem!("h1"; "Section"),
+///         end_elem!("p"; "Text goes here..."),
+///     ),
+/// );
+/// let expect = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>";
+/// assert_eq!(expect, html.render());
+/// ```
 #[macro_export]
 macro_rules! html {
     ($($x:expr),*) => {
@@ -96,6 +177,19 @@ macro_rules! html {
     };
 }
 
+/// creates HTML Document contains DocumenType and HTML element
+/// # Example
+/// ```
+/// use dom_renderer::*;
+/// let html = html_basic!(
+///     title: "Page Title",
+///     body:
+///         end_elem!("h1"; "Section"),
+///         end_elem!("p"; "Text goes here..."),
+/// );
+/// let expect = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>";
+/// assert_eq!(expect, html.render());
+/// ```
 #[macro_export]
 macro_rules! html_basic {
     (title: $t:expr, body: $($b:expr),*) => {

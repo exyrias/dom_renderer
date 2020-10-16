@@ -1,5 +1,8 @@
+//! provides DOM DocumentType
+
 use crate::Render;
 
+/// DOM DocumentType node
 #[derive(Debug, Clone)]
 pub struct DomDocType {
     pub doc_type: &'static str,

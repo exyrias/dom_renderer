@@ -1,8 +1,12 @@
 [package]
 name = "dom_renderer"
+license = "MIT"
 version = "0.1.0"
 authors = ["exyrias <25100303+exyrias@users.noreply.github.com>"]
 edition = "2018"
+description = "Crate for rendering html (or other DOMs) strings"
+keywords = ["DOM", "HTML"]
+repository = "https://github.com/exyrias/dom_renderer.git"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
