@@ -73,3 +73,19 @@ impl Render for DomNode {
         }
     }
 }
+
+impl DomNode {
+    pub fn as_elem(&self) -> Option<&DomElem> {
+        match *self {
+            Element(ref e) => Some(e),
+            _ => None,
+        }
+    }
+
+    pub fn as_elem_mut(&mut self) -> Option<&mut DomElem> {
+        match *self {
+            Element(ref mut e) => Some(e),
+            _ => None,
+        }
+    }
+}
