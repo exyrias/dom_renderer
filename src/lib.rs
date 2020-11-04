@@ -32,8 +32,37 @@
 //! let tbl = elem!("table"; ("border", "1"); th, tr1, tr2);
 //! assert_eq!("<table border=\"1\"><tr><th>Item1</th><th>Item2</th><th>Item3</th></tr><tr><td>value 11</td><td>value 12</td><td>value 13</td></tr><tr><td>value 21</td><td>value 22</td><td>value 23</td></tr></table>", tbl.render());
 //! ```
-//!
-//! DOM Nodes are represented by `enum DomNode`, which can be created by macros, e.g.,
+//! 
+//! DOM Nodes are represented by `enum DomNode`, which can be created by macros.
+//! 
+//! Child nodes can be changed using as_XXX() methods. 
+//! 
+//! ```
+//! use dom_renderer::*;
+//! 
+//! let mut tbl = elem!("table");
+//! let tbl_elem = tbl.as_elem_mut().unwrap();
+//! tbl_elem.attributes.push(("border", String::from("1")));
+//! // header
+//! let mut tr = elem!("tr");
+//! let headers = (1..=3)
+//!     .map(|i| format!("Item{}", i))
+//!     .map(|x| end_elem!("th"; x))
+//!     .collect();
+//! tr.as_elem_mut().unwrap().child_nodes = headers;
+//! tbl_elem.child_nodes.push(tr);
+//! // data
+//! for i in 1..=2 {
+//!     let mut tr = elem!("tr");
+//!     let data = (1..=3)
+//!         .map(|j| format!("value {}{}", i, j))
+//!         .map(|x| end_elem!("td"; x))
+//!         .collect();
+//!     tr.as_elem_mut().unwrap().child_nodes = data;
+//!     tbl_elem.child_nodes.push(tr);
+//! }
+//! assert_eq!("<table border=\"1\"><tr><th>Item1</th><th>Item2</th><th>Item3</th></tr><tr><td>value 11</td><td>value 12</td><td>value 13</td></tr><tr><td>value 21</td><td>value 22</td><td>value 23</td></tr></table>", tbl.render());
+//! ```
 //!
 
 pub mod doc_type;
