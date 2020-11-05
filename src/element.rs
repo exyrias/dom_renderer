@@ -3,6 +3,28 @@
 use crate::{DomNode, Render};
 
 /// DOM Empty Element
+/// 
+/// # Example
+/// ```
+/// use dom_renderer::*;
+/// 
+/// let expect = r#"<input type="text" name="user_name">"#;
+/// 
+/// let input = empty!("input";
+///     ("type", "text"),
+///     ("name", "user_name"),
+/// );
+/// assert_eq!(expect, input.render());
+/// 
+/// // the above macro is extrated as
+/// let input = EmptyElement(DomEmptyElem::new(
+///     "input",
+///     vec![
+///         ("type", String::from("text")),
+///         ("name", String::from("user_name")),
+///     ]));
+/// assert_eq!(expect, input.render());
+/// ```
 #[derive(Debug, Clone)]
 pub struct DomEmptyElem {
     pub tag: &'static str,
@@ -31,6 +53,22 @@ impl Render for DomEmptyElem {
 }
 
 /// DOM Element with child elements
+/// 
+/// # Example
+/// ```
+/// use dom_renderer::*;
+/// 
+/// // Macro `elem!` creates an instace of DomNode::Element(DomElem).
+/// let div = elem!("div";
+///     ("id", "id1"),
+///     ("class", "class1");
+///     domtxt!("text"),
+///     empty!("br"),
+///     domtxt!("text"),
+/// );
+/// 
+/// assert_eq!(r#"<div id="id1" class="class1">text<br>text</div>"#, div.render());
+/// ```
 #[derive(Debug, Clone)]
 pub struct DomElem {
     pub tag: &'static str,

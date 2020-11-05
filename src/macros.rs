@@ -52,7 +52,7 @@ macro_rules! domtxt {
 ///     ("type", "text"),
 ///     ("name", "user_name"),
 /// );
-/// assert_eq!("<input type=\"text\" name=\"user_name\">", input.render());
+/// assert_eq!(r#"<input type="text" name="user_name">"#, input.render());
 /// ```
 #[macro_export]
 macro_rules! empty {
@@ -75,6 +75,20 @@ macro_rules! empty {
 /// 
 /// ```
 /// use dom_renderer::*;
+/// 
+/// let div = elem!("div";
+///     domtxt!("text"),
+///     empty!("br"),
+///     domtxt!("text"),
+/// );
+/// assert_eq!(r#"<div>text<br>text</div>"#, div.render());
+/// 
+/// let div = elem!("div";
+///     ("id", "id1"),
+///     ("class", "class1")
+/// );
+/// assert_eq!(r#"<div id="id1" class="class1"></div>"#, div.render());
+/// 
 /// let div = elem!("div";
 ///     ("id", "id1"),
 ///     ("class", "class1");
@@ -82,7 +96,8 @@ macro_rules! empty {
 ///     empty!("br"),
 ///     domtxt!("text"),
 /// );
-/// assert_eq!("<div id=\"id1\" class=\"class1\">text<br>text</div>", div.render());
+/// assert_eq!(r#"<div id="id1" class="class1">text<br>text</div>"#, div.render());
+/// 
 /// ```
 #[macro_export]
 macro_rules! elem {
@@ -120,6 +135,8 @@ macro_rules! elem {
 }
 
 /// crates DOM Element that have a single text node.
+/// 
+/// `end_elem!(tag; attrs..; text)` is extracted as `elem!(tag; attrs..; domtxt!(text))`
 /// # Example
 /// Tag, attribute lists, and text are separated by ';'
 /// 
@@ -154,7 +171,7 @@ macro_rules! end_elem {
 ///         end_elem!("p"; "Text goes here..."),
 ///     ),
 /// );
-/// let expect = "<!DOCTYPE html><html lang=\"en\"><head><meta charset=\"utf-8\"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>";
+/// let expect = r#"<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>"#;
 /// assert_eq!(expect, html.render());
 /// ```
 #[macro_export]
@@ -187,7 +204,7 @@ macro_rules! html {
 ///         end_elem!("h1"; "Section"),
 ///         end_elem!("p"; "Text goes here..."),
 /// );
-/// let expect = "<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>";
+/// let expect = r#"<!DOCTYPE html><html><head><meta charset="utf-8"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>"#;
 /// assert_eq!(expect, html.render());
 /// ```
 #[macro_export]

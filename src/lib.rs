@@ -6,31 +6,32 @@
 //!
 //! ```
 //! use dom_renderer::*;
+//! 
 //! let html = html_basic!(
 //!     title: "Page Title",
 //!     body:
 //!         end_elem!("h1"; "Section"),
 //!         end_elem!("p"; "Text goes here..."),
 //! );
-//! assert_eq!("<!DOCTYPE html><html><head><meta charset=\"utf-8\"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>", html.render());
+//! assert_eq!(r#"<!DOCTYPE html><html><head><meta charset="utf-8"><title>Page Title</title></head><body><h1>Section</h1><p>Text goes here...</p></body></html>"#, html.render());
 //!
 //! let th = elem!("tr";
-//!             end_elem!("th"; "Item1"),
-//!             end_elem!("th"; "Item2"),
-//!             end_elem!("th"; "Item3"),
+//!     end_elem!("th"; "Item1"),
+//!     end_elem!("th"; "Item2"),
+//!     end_elem!("th"; "Item3"),
 //! );
 //! let tr1 = elem!("tr";
-//!             end_elem!("td"; "value 11"),
-//!             end_elem!("td"; "value 12"),
-//!             end_elem!("td"; "value 13"),
+//!     end_elem!("td"; "value 11"),
+//!     end_elem!("td"; "value 12"),
+//!     end_elem!("td"; "value 13"),
 //! );
 //! let tr2 = elem!("tr";
-//!             end_elem!("td"; "value 21"),
-//!             end_elem!("td"; "value 22"),
-//!             end_elem!("td"; "value 23"),
+//!     end_elem!("td"; "value 21"),
+//!     end_elem!("td"; "value 22"),
+//!     end_elem!("td"; "value 23"),
 //! );
 //! let tbl = elem!("table"; ("border", "1"); th, tr1, tr2);
-//! assert_eq!("<table border=\"1\"><tr><th>Item1</th><th>Item2</th><th>Item3</th></tr><tr><td>value 11</td><td>value 12</td><td>value 13</td></tr><tr><td>value 21</td><td>value 22</td><td>value 23</td></tr></table>", tbl.render());
+//! assert_eq!(r#"<table border="1"><tr><th>Item1</th><th>Item2</th><th>Item3</th></tr><tr><td>value 11</td><td>value 12</td><td>value 13</td></tr><tr><td>value 21</td><td>value 22</td><td>value 23</td></tr></table>"#, tbl.render());
 //! ```
 //! 
 //! DOM Nodes are represented by `enum DomNode`, which can be created by macros.
@@ -40,8 +41,9 @@
 //! ```
 //! use dom_renderer::*;
 //! 
+//! # fn test() -> Option<()> {
 //! let mut tbl = elem!("table");
-//! let tbl_elem = tbl.as_elem_mut().unwrap();
+//! let tbl_elem = tbl.as_elem_mut()?;
 //! tbl_elem.attributes.push(("border", String::from("1")));
 //! // header
 //! let mut tr = elem!("tr");
@@ -49,7 +51,7 @@
 //!     .map(|i| format!("Item{}", i))
 //!     .map(|x| end_elem!("th"; x))
 //!     .collect();
-//! tr.as_elem_mut().unwrap().child_nodes = headers;
+//! tr.as_elem_mut()?.child_nodes = headers;
 //! tbl_elem.child_nodes.push(tr);
 //! // data
 //! for i in 1..=2 {
@@ -58,10 +60,12 @@
 //!         .map(|j| format!("value {}{}", i, j))
 //!         .map(|x| end_elem!("td"; x))
 //!         .collect();
-//!     tr.as_elem_mut().unwrap().child_nodes = data;
+//!     tr.as_elem_mut()?.child_nodes = data;
 //!     tbl_elem.child_nodes.push(tr);
 //! }
-//! assert_eq!("<table border=\"1\"><tr><th>Item1</th><th>Item2</th><th>Item3</th></tr><tr><td>value 11</td><td>value 12</td><td>value 13</td></tr><tr><td>value 21</td><td>value 22</td><td>value 23</td></tr></table>", tbl.render());
+//! assert_eq!(r#"<table border="1"><tr><th>Item1</th><th>Item2</th><th>Item3</th></tr><tr><td>value 11</td><td>value 12</td><td>value 13</td></tr><tr><td>value 21</td><td>value 22</td><td>value 23</td></tr></table>"#, tbl.render());
+//! # Some(())
+//! # }
 //! ```
 //!
 
@@ -81,6 +85,14 @@ pub trait Render {
 }
 
 /// Node types
+/// 
+/// # Macros
+/// Each variant can be created by the corresponding macro.
+/// - `Document`: `domdoc!`
+/// - `DocumentType`: `doctype!`
+/// - `EmptyElement`: `empty!`
+/// - `Element`: `elem!`, `end_elem!`
+/// - `Text`: `domtxt!`
 #[derive(Debug, Clone)]
 pub enum DomNode {
     Document(DomDocument),
